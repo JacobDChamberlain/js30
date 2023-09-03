@@ -38,7 +38,7 @@
 
     // Array.prototype.filter()
     // 1. Filter the list of inventors for those who were born in the 1500's ✅
-    const bornIn1500s = inventors.filter( inventor => inventor.year >= 1500 && inventor.year <= 1599 );
+    const bornIn1500s = inventors.filter( inventor => inventor.year >= 1500 && inventor.year < 1600 );
     const filteredInventors = [];
     for ( const inventor of bornIn1500s ) {
         filteredInventors.push({
@@ -48,6 +48,7 @@
         });
     }
     console.log( 'Born in 1500s: ',filteredInventors);
+    console.table( filteredInventors );
 
     // Array.prototype.map()
     // 2. Give us an array of the inventors first and last names
@@ -56,8 +57,9 @@
 
     // Array.prototype.sort()
     // 3. Sort the inventors by birthdate, oldest to youngest
-    inventors.sort( ( a, b ) => b.year - a.year );
-    console.log( 'Oldest To Youngest---------------------------------------: ', inventors );
+    const oldestToYoungest = inventors.sort( ( a, b ) => a.year > b.year ? 1 : -1 );
+    console.log( 'Oldest To Youngest: ', oldestToYoungest );
+    console.table( oldestToYoungest );
 
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live all together?
@@ -82,18 +84,13 @@
 
     // 7. sort Exercise
     // Sort the people alphabetically by last name
-    const sorted = inventors.sort( ( a, b ) => a.last - b.last );
-    console.log( 'Sorted alphabetically by last name---------------------------------------: ', sorted );
+    const sorted = inventors.sort( ( a, b ) => a.last > b.last ? 1 : -1 );
+    console.log( 'Sorted alphabetically by last name: ', sorted );
+    console.table( sorted );
 
     // 8. Reduce Exercise
     // Sum up the instances of each of these // TRY W/ A FOR LOOP REDUCING ON EACH ONE or filtering then doing it
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
-    const numInstances = [];
-    for ( const datum of data ) {
-        const onlyCurrDatumData = data.filter( bit => bit === datum );
-        numInstances.push( { datum: datum, instances: onlyCurrDatumData.length } );
-    }
-    console.log( 'Number of Instances for each: ', numInstances );
 
   </script>
 </body>
