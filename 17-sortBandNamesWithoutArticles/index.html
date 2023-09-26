@@ -63,28 +63,39 @@ const bands = [
     'An Old Dog'
   ];
 
-  const articles = ['The', 'A', 'An'];
-  const bandsWithoutArticles = bands.map(band => {
-    bandArr = band.split(' ');
-    for ( const article of articles ) {
-      if ( bandArr[0] === article ) bandArr.shift();
-    }
-    return bandArr.join(' ');
-  });
+  // const articles = ['The', 'A', 'An'];
+  // const bandsWithoutArticles = bands.map(band => {
+  //   bandArr = band.split(' ');
+  //   for ( const article of articles ) {
+  //     if ( bandArr[0] === article ) bandArr.shift();
+  //   }
+  //   return bandArr.join(' ');
+  // });
 
-  const indicesMap = {};
-  for ( let i = 0; i < bandsWithoutArticles.length; i++ ) {
-    indicesMap[bandsWithoutArticles[i]] = i;
+  // const indicesMap = {};
+  // for ( let i = 0; i < bandsWithoutArticles.length; i++ ) {
+  //   indicesMap[bandsWithoutArticles[i]] = i;
+  // }
+
+  // const sortedList = Object.keys( indicesMap ).sort();
+
+  // const bandList = document.querySelector('#bands');
+  // sortedList.forEach( band => {
+  //   const bandListItem = document.createElement('li');
+  //   bandListItem.innerText = bands[ indicesMap[ band ] ];
+  //   bandList.appendChild( bandListItem );
+  // });
+
+  function strip(bandName) {
+    return bandName.replace(/^(a |the |an)/i, '').trim();
   }
 
-  const sortedList = Object.keys( indicesMap ).sort();
+  const sortedBands = bands.sort( (a, b) => strip(a) > strip(b) ? 1 : -1 );
 
-const bandList = document.querySelector('#bands');
-sortedList.forEach( band => {
-  const bandListItem = document.createElement('li');
-  bandListItem.innerText = bands[ indicesMap[ band ] ];
-  bandList.appendChild( bandListItem );
-});
+  document.querySelector('#bands').innerHTML =
+    sortedBands
+      .map( band => `<li>${band}</li>` )
+      .join('');
 
 </script>
 
