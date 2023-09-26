@@ -47,8 +47,44 @@
   <ul id="bands"></ul>
 
 <script>
-const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+const bands = [
+    'The Plot in You',
+    'The Devil Wears Prada',
+    'Pierce the Veil',
+    'Norma Jean',
+    'The Bled',
+    'Say Anything',
+    'The Midway State',
+    'We Came as Romans',
+    'Counterparts',
+    'Oh, Sleeper',
+    'A Skylit Drive',
+    'Anywhere But Here',
+    'An Old Dog'
+  ];
 
+  const articles = ['The', 'A', 'An'];
+  const bandsWithoutArticles = bands.map(band => {
+    bandArr = band.split(' ');
+    for ( const article of articles ) {
+      if ( bandArr[0] === article ) bandArr.shift();
+    }
+    return bandArr.join(' ');
+  });
+
+  const indicesMap = {};
+  for ( let i = 0; i < bandsWithoutArticles.length; i++ ) {
+    indicesMap[bandsWithoutArticles[i]] = i;
+  }
+
+  const sortedList = Object.keys( indicesMap ).sort();
+
+const bandList = document.querySelector('#bands');
+sortedList.forEach( band => {
+  const bandListItem = document.createElement('li');
+  bandListItem.innerText = bands[ indicesMap[ band ] ];
+  bandList.appendChild( bandListItem );
+});
 
 </script>
 
