@@ -21,8 +21,16 @@ function paintToCanvas() {
 
     return setInterval(() => {
         ctx.drawImage( video, 0, 0, width, height );
+        // take the pixels out
         let pixels = ctx.getImageData( 0, 0, width, height );
-        pixels = redEffect( pixels );
+        // mess with them
+        // pixels = redEffect( pixels );
+
+        pixels = rgbSplit( pixels );
+        ctx.globalAlpha = 0.1; // "ghost blur" - places a transparency of 10% of the current image on top for 10 frames
+
+        pixels = greenScreen( pixels );
+        // put them back
         ctx.putImageData( pixels, 0, 0 );
     }, 16);
 }
@@ -43,9 +51,52 @@ function takePhoto() {
 
 function redEffect( pixels ) {
     for ( let i = 0; i < pixels.data.length; i+=4 ) {
-        pixels[i + 0] = pixels.data[i + 0] + 100; // red
-        pixels[i + 1] = pixels.data[i + 1] - 50; // green
-        pixels[i + 2] = pixels.data[i + 2] * 0.5; // blue
+        pixels.data[i + 0] = pixels.data[i + 0] + 100; // red
+        pixels.data[i + 1] = pixels.data[i + 1] - 50; // green
+        pixels.data[i + 2] = pixels.data[i + 2] * 0.5; // blue
+        // pixels.data[i + 0] = pixels.data[i + 0] - 1000; // red
+        // pixels.data[i + 1] = pixels.data[i + 1] + 50; // green
+        // pixels.data[i + 2] = pixels.data[i + 2] / 0.5; // blue
+    }
+    return pixels;
+}
+
+function rgbSplit( pixels ) {
+    for ( let i = 0; i < pixels.data.length; i+=4 ) {
+        pixels.data[i - 150] = pixels.data[i + 0]; // red
+        pixels.data[i + 100] = pixels.data[i + 1]; // green
+        pixels.data[i - 150] = pixels.data[i + 2]; // blue
+        // pixels.data[i - 1500] = pixels.data[i + 0]; // red
+        // pixels.data[i + 400] = pixels.data[i + 1]; // green
+        // pixels.data[i - 350] = pixels.data[i + 2]; // blue
+    }
+    return pixels;
+}
+
+function greenScreen( pixels ) {
+    const levels = {};
+
+    document.querySelectorAll('.rgb input').forEach( input => {
+        levels[input.name] = input.value;
+    });
+
+    console.log( levels );
+
+    for ( i = 0; i < pixels.data.length; i += 4 ) {
+        red = pixels.data[i + 0];
+        green = pixels.data[i + 1];
+        blue = pixels.data[i + 2];
+        alpha = pixels.data[i + 3];
+
+        if ( red >= levels.rmin
+            && green >= levels.gmin
+            && blue >= levels.bmin
+            && red <= levels.rmax
+            && green <= levels.gmax
+            && blue <= levels.bmax ) {
+            // make the pixel transparent!
+            pixels.data[i + 3] = 0; // b/c every fourth element is the alpha value which makes things transparent
+        }
     }
 
     return pixels;
